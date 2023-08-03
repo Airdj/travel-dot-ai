@@ -16,8 +16,6 @@ def api_connection_check():
         print('Oops, connection went wrong :(')
 
 
-
-
 def get_city_coordinates():
     city = input('Podaj nazwe miasta:')
 
@@ -36,17 +34,18 @@ def get_city_coordinates():
 
 def get_nearby_locations():
     cords = get_city_coordinates()
-    lat = cords.get('lat')
-    lan = cords.get('lan')
-    radius_in_meters = '2000'
-    types = 'restaurant'
+    location = 'location='+ str(cords.get('lat')) + ',' + str(cords.get('lng'))
+
+    params = {'types': 'restaurant',
+              'radius': '500',
+              'key': YOUR_API_KEY
+              }
+
     response = requests.get(f'https://maps.googleapis.com/maps/api/place'
-                            f'/nearbysearch/json?'
-                            f'location={str(lat)},{str(lan)}'
-                            f'&radius={radius_in_meters}'
-                            f'&types={types}'
-                            f'&name=harbour'
-                            f'&key={YOUR_API_KEY}')
+                            f'/nearbysearch/json?{location}', params=params)
+
     return response.json()
+
+
 if __name__ == '__main__':
     print(get_nearby_locations())
