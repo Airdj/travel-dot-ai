@@ -1,5 +1,6 @@
 import requests
 import json
+import pandas as pd
 from config import API_KEY
 YOUR_API_KEY = API_KEY
 
@@ -36,16 +37,33 @@ def get_nearby_locations():
     cords = get_city_coordinates()
     location = 'location='+ str(cords.get('lat')) + ',' + str(cords.get('lng'))
 
-    params = {'types': 'restaurant',
-              'radius': '500',
+    params = {#'types': 'restaurant',
+              'radius': '5000',
               'key': YOUR_API_KEY
               }
 
     response = requests.get(f'https://maps.googleapis.com/maps/api/place'
                             f'/nearbysearch/json?{location}', params=params)
 
+    df = pd.DataFrame(response.json()['results'])
+
+    return df
+
+
+def get_place_info():
+    params = {#'place_id': place_id,
+              'language': 'en',
+              'reviews_no_translations': False,
+              'key': YOUR_API_KEY}
+
+    response = requests.get('https://maps.googleapis.com/maps/api/place/'
+                            'details/json?place_id=ChIJU3DpyxBbFkcRZJt4gU0Poqo'
+                            , params=params)
+
     return response.json()
 
 
 if __name__ == '__main__':
-    print(get_nearby_locations())
+    test2 = get_place_info()['result']
+    print(test2['reviews'])
+
