@@ -26,7 +26,7 @@ def get_city_coordinates():
                 f'inputtype=textquery&fields=formatted_address%2Cname%2Crating'
                 f'%2Copening_hours%2Cgeometry&key={YOUR_API_KEY}')
 
-    if response.json()['status'] == 'OK':
+    if response.json().get('status') == 'OK':
         location = response.json()['candidates'][0]['geometry']['location']
         return location
     else:
@@ -45,25 +45,25 @@ def get_nearby_locations():
     response = requests.get(f'https://maps.googleapis.com/maps/api/place'
                             f'/nearbysearch/json?{location}', params=params)
 
-    df = pd.DataFrame(response.json()['results'])
+    df = pd.DataFrame(response.json().get('results','Oops, could not get '
+                                                    'that :('))
 
     return df
 
 
-def get_place_info():
-    params = {#'place_id': place_id,
+def get_place_info(place_id):
+    params = {'place_id': place_id,
               'language': 'en',
               'reviews_no_translations': False,
               'key': YOUR_API_KEY}
 
     response = requests.get('https://maps.googleapis.com/maps/api/place/'
-                            'details/json?place_id=ChIJU3DpyxBbFkcRZJt4gU0Poqo'
+                            'details/json?'
                             , params=params)
 
-    return response.json()
+    return response.json().get('result', 'Oops , could not get results :(')
 
 
 if __name__ == '__main__':
-    test2 = get_place_info()['result']
-    print(test2['reviews'])
+    print(get_nearby_locations())
 
