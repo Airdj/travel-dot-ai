@@ -1,4 +1,5 @@
 import requests
+import pandas as pd
 from config import API_KEY
 YOUR_API_KEY = API_KEY
 
@@ -15,12 +16,10 @@ def api_connection_check():
         print(err, 'Oops, connection went wrong :(')
 
 
-def get_city_coordinates():
-    city = input('Podaj nazwe miasta:')
-
+def get_city_coordinates(cityname):
     response = requests.get(f'https://maps.googleapis.com/maps/api/place'
                 f'/findplacefromtext'
-                f'/json?input={city}&'
+                f'/json?input={cityname}&'
                 f'inputtype=textquery&fields=formatted_address%2Cname%2Crating'
                 f'%2Copening_hours%2Cgeometry&key={YOUR_API_KEY}')
 
@@ -29,8 +28,10 @@ def get_city_coordinates():
         return location
 
 
-def get_nearby_locations(ent_type='restaurant', radius='10000', nextp_tok=''):
-    cords = get_city_coordinates()
+def get_nearby_locations(cityname, next_pt=None,
+                         ent_type='restaurant',
+                         radius='10000'):
+    cords = get_city_coordinates(cityname)
     if cords:
         location = 'location=' + str(cords.get('lat')) + ',' + str(
             cords.get('lng'))
@@ -38,7 +39,7 @@ def get_nearby_locations(ent_type='restaurant', radius='10000', nextp_tok=''):
         params = {'types': ent_type,
                   'radius': radius,
                   'key': YOUR_API_KEY,
-                  'pagetoken': nextp_tok
+                  'pagetoken': next_pt
                   }
 
         response = requests.get(f'https://maps.googleapis.com/maps/api/place'
