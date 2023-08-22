@@ -1,6 +1,4 @@
 import requests
-import json
-import pandas as pd
 from config import API_KEY
 YOUR_API_KEY = API_KEY
 
@@ -14,7 +12,7 @@ def api_connection_check():
         response.raise_for_status()
         return response
     except requests.exceptions.HTTPError as err:
-        print('Oops, connection went wrong :(')
+        print(err, 'Oops, connection went wrong :(')
 
 
 def get_city_coordinates():
@@ -29,26 +27,24 @@ def get_city_coordinates():
     if response.json().get('status') == 'OK':
         location = response.json()['candidates'][0]['geometry']['location']
         return location
-    else:
-        return 'Ooops, we could not find this city :('
 
 
-def get_nearby_locations():
+def get_nearby_locations(ent_type='restaurant', radius='10000', nextp_tok=''):
     cords = get_city_coordinates()
-    location = 'location='+ str(cords.get('lat')) + ',' + str(cords.get('lng'))
+    if cords:
+        location = 'location=' + str(cords.get('lat')) + ',' + str(
+            cords.get('lng'))
 
-    params = {#'types': 'restaurant',
-              'radius': '5000',
-              'key': YOUR_API_KEY
-              }
+        params = {'types': ent_type,
+                  'radius': radius,
+                  'key': YOUR_API_KEY,
+                  'pagetoken': nextp_tok
+                  }
 
-    response = requests.get(f'https://maps.googleapis.com/maps/api/place'
-                            f'/nearbysearch/json?{location}', params=params)
+        response = requests.get(f'https://maps.googleapis.com/maps/api/place'
+                                f'/nearbysearch/json?{location}', params=params)
 
-    df = pd.DataFrame(response.json().get('results','Oops, could not get '
-                                                    'that :('))
-
-    return df
+        return response.json()
 
 
 def get_place_info(place_id):
@@ -58,12 +54,6 @@ def get_place_info(place_id):
               'key': YOUR_API_KEY}
 
     response = requests.get('https://maps.googleapis.com/maps/api/place/'
-                            'details/json?'
-                            , params=params)
+                            'details/json?', params=params)
 
     return response.json().get('result', 'Oops , could not get results :(')
-
-
-if __name__ == '__main__':
-    print(get_nearby_locations())
-
