@@ -19,7 +19,7 @@ class City(Base):
 
     city_id = Column(Integer(), primary_key=True)
     city_name = Column(String(100), index=True)
-    localisation = Column(String(20))
+    localisation = Column(String(100))
 
 
 class PlaceAround(Base):
@@ -33,7 +33,7 @@ class PlaceAround(Base):
     user_ratings_total = Column(Numeric())
     types = Column(String(500))
 
-    city = relationship('City', backref('places_around'))
+    city = relationship('City', backref=backref('places_around'))
 
 
 
