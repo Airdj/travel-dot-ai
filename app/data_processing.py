@@ -32,5 +32,3 @@ def data_cleaner(df):
 
     return new_df
 
-
-

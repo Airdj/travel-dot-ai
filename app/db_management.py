@@ -1,6 +1,9 @@
 from db import session, City, PlaceAround
+from sqlalchemy import exists
 from api_management import get_city_coordinates
 from data_processing import get_as_much_data_as_possible, data_cleaner
+from config import types
+import pandas as pd
 
 
 def insert_city(name, loc):
@@ -24,4 +27,27 @@ def insert_place_around(df, new_city):
         session.commit()
 
 
+def get_total_data(city_to_add):
+    city_loc = get_city_coordinates(city_to_add)
+    reformatted_loc = str(city_loc.get('lat')) + ',' + str(city_loc.get(
+        'lng'))
+    data_to_concat = []
+    for i in types:
+        try:
+            data_to_concat.append(data_cleaner(get_as_much_data_as_possible
+                                               (city_to_add, i)))
+            print(f'done with {i}')
+        except Exception:
+            pass
+    total_data = pd.concat(data_to_concat)
+    total_data = total_data.drop_duplicates(inplace=True).reset_index()
+    insert_place_around(total_data, insert_city(city_to_add, reformatted_loc))
+    print('done')
+
+
+if __name__ == '__main__':
+
+
+
+    get_total_data('')
 

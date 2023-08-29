@@ -1,5 +1,5 @@
-from sqlalchemy import MetaData, Table, Column, Integer, Numeric, String, \
-    ForeignKey, create_engine
+from sqlalchemy import Column, Integer, Numeric, String, ForeignKey, \
+    create_engine
 from sqlalchemy.orm import declarative_base, relationship, backref, \
     sessionmaker
 from config import username, password
@@ -18,8 +18,10 @@ class City(Base):
     __tablename__ = 'cities'
 
     city_id = Column(Integer(), primary_key=True)
-    city_name = Column(String(100), index=True)
-    localisation = Column(String(100))
+    city_name = Column(String(200), index=True)
+    localisation = Column(String(200))
+
+    place_around = relationship('PlaceAround', backref=backref('cities'))
 
 
 class PlaceAround(Base):
@@ -27,16 +29,13 @@ class PlaceAround(Base):
 
     place_id = Column(Integer(), primary_key=True)
     city_id = Column(Integer(), ForeignKey('cities.city_id'))
-    name = Column(String(100))
+    name = Column(String(200))
     place_id_string = Column(String(500))
     rating = Column(Numeric())
     user_ratings_total = Column(Numeric())
     types = Column(String(500))
 
     city = relationship('City', backref=backref('places_around'))
-
-
-
 
 
 if __name__ == '__main__':
