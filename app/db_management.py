@@ -40,14 +40,26 @@ def get_total_data(city_to_add):
         except Exception:
             pass
     total_data = pd.concat(data_to_concat)
-    total_data = total_data.drop_duplicates(inplace=True).reset_index()
+    total_data = total_data.reset_index()
     insert_place_around(total_data, insert_city(city_to_add, reformatted_loc))
     print('done')
+    return total_data
 
 
 if __name__ == '__main__':
-
-
-
-    get_total_data('')
-
+    city_prompt = input('what city to check?').lower().strip()
+    ret = session.query(exists().where(City.city_name == city_prompt)).scalar()
+    if ret:
+        city_selected = session.query(PlaceAround)\
+                               .join(City)\
+                               .filter(City.city_name == city_prompt)
+        for i in city_selected:
+            print(i)
+    else:
+        print('Please wait. It might take a while...')
+        get_total_data(city_prompt)
+        city_selected = session.query(PlaceAround)\
+                               .join(City)\
+                               .filter(City.city_name == city_prompt)
+        for i in city_selected:
+            print(i)

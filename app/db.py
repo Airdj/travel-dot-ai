@@ -21,7 +21,10 @@ class City(Base):
     city_name = Column(String(200), index=True)
     localisation = Column(String(200))
 
-    place_around = relationship('PlaceAround', backref=backref('cities'))
+    def __repr__(self):
+        return f"City(city_id='{self.city_id}'," \
+               f"city_name='{self.city_name}'," \
+               f"localisation='{self.localisation}'"
 
 
 class PlaceAround(Base):
@@ -35,7 +38,16 @@ class PlaceAround(Base):
     user_ratings_total = Column(Numeric())
     types = Column(String(500))
 
-    city = relationship('City', backref=backref('places_around'))
+    city = relationship('City')
+
+    def __repr__(self):
+        return f"PlaceAround(place_id= '{self.place_id}'," \
+               f"city_id= '{self.city_id}'," \
+               f"name= '{self.name}'," \
+               f"place_id_string= '{self.place_id_string}'," \
+               f"rating= '{self.rating}'," \
+               f"user_ratings_total= '{self.user_ratings_total}'," \
+               f"types= '{self.types}')"
 
 
 if __name__ == '__main__':
