@@ -27,8 +27,10 @@ def get_as_much_data_as_possible(city_name, entity_type):
 def data_cleaner(df):
     new_df = df.reset_index()
     new_df.rename(columns={'place_id': 'place_id_string'}, inplace=True)
+    new_df['types'] = new_df['types'].astype(str)\
+                                     .str.strip('[]')\
+                                     .str.replace("'", "")
     new_df = new_df[['place_id_string', 'name', 'rating', 'user_ratings_total',
                     'types']]
 
     return new_df
-

@@ -60,4 +60,3 @@ def get_place_info(place_id):
                             'details/json?', params=params)
 
     return response.json().get('result', 'N/A')
-
