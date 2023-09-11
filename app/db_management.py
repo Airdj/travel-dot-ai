@@ -96,7 +96,30 @@ def final_prompter_by_loc():
         print('Sorry, something went wrong :(')
 
 
+def final_prompter_by_loc_flask(city_prompt):
+    try:
+        city_loc = get_city_coordinates(city_prompt)
+        reformatted_loc = str(city_loc.get('lat')) + ',' + str(city_loc.get(
+            'lng'))
+        ret = session.query(exists().where(City.localisation == reformatted_loc)) \
+            .scalar()
+        if ret:
+            city_selected = session.query(PlaceAround) \
+                .join(City) \
+                .filter(City.localisation == reformatted_loc)
+            df = pd.read_sql_query(city_selected.statement, con=engine)
+            print(df.sample(n=10))
+        else:
+            print('Please wait. It might take a while...')
+            get_total_data(city_prompt)
+            city_selected = session.query(PlaceAround) \
+                .join(City) \
+                .filter(City.localisation == reformatted_loc)
+            df = pd.read_sql_query(city_selected.statement, con=engine)
+            print(df.sample(n=10))
+    except Exception:
+        print('Sorry, something went wrong :(')
+
+
 if __name__ == '__main__':
     final_prompter_by_loc()
-
-

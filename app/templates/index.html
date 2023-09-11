@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %} Travel.ai {% endblock %}
+
+
+{% block head %}
+{{ super() }}
+<style>
+</style>
+{% endblock %}
+
+
+{% block page_content %}
+{{ wtf.quick_form(form) }}
+<div class="city_results">
+    <h1>Result:</h1>
+    {% for table in tables %}
+        <table>
+            <tbody>
+            {{ table|safe }}
+            </tbody>
+        </table>
+    {% endfor %}
+</div>
+{% endblock %}

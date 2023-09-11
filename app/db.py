@@ -1,7 +1,6 @@
 from sqlalchemy import Column, Integer, Numeric, String, ForeignKey, \
     create_engine
-from sqlalchemy.orm import declarative_base, relationship, backref, \
-    sessionmaker
+from sqlalchemy.orm import declarative_base, relationship, sessionmaker
 from config import username, password
 
 your_username = username
