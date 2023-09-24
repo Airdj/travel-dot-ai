@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
 from config import FLASK_SECRET_KEY, username, password
@@ -27,20 +27,23 @@ from flask_db_management import final_prompter_by_loc_flask
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    global data_table
     form = CityForm()
     if form.validate_on_submit():
+
         func_result = final_prompter_by_loc_flask(form.city.data)
+        data_table = func_result.copy()
         return render_template('index.html', form=form,
                                tables=[func_result.to_html(classes='data',
                                        index=False)],
                                titles=func_result.columns.values)
+    if request.form.get('like'):
+        print(data_table)
+        return render_template('thanks.html')
+    elif request.form.get('dislike'):
+        return render_template('thanks.html')
     else:
         return render_template('index.html', form=form)
-
-
-@app.route('/user/<name>')
-def user(name):
-    return f'<h1> Siema {name}!</h1>'
 
 
 @app.errorhandler(404)

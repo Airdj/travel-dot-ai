@@ -23,4 +23,11 @@
         </table>
     {% endfor %}
 </div>
+<form method="post" action="/">
+    {% if tables %}
+    <input type="submit" name="like" value="Like">
+    <input type="submit" name="dislike" value="Dislike">
+    {% endif %}
+</form>
+
 {% endblock %}
