@@ -20,4 +20,3 @@ app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql+psycopg2://' \
                                         f'postgresql'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-

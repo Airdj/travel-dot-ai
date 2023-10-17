@@ -21,7 +21,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 bootstrap = Bootstrap(app)
 
-from flask_db_management import final_prompter_by_loc_flask
+from flask_db_management import final_prompter_by_loc_flask, data_aftermarket
 # sorry :( temporary solution
 
 
@@ -35,12 +35,14 @@ def index():
         data_table = func_result.copy()
         return render_template('index.html', form=form,
                                tables=[func_result.to_html(classes='data',
-                                       index=False)],
-                               titles=func_result.columns.values)
+                                       index=False,
+                                       columns=['name', 'rating'])],
+                                       titles=func_result.columns.values)
     if request.form.get('like'):
-        print(data_table)
+        data_aftermarket(data_table, 1)
         return render_template('thanks.html')
     elif request.form.get('dislike'):
+        data_aftermarket(data_table, -1)
         return render_template('thanks.html')
     else:
         return render_template('index.html', form=form)
