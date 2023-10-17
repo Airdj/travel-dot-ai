@@ -37,7 +37,7 @@ def index():
                                tables=[func_result.to_html(classes='data',
                                        index=False,
                                        columns=['name', 'rating'])],
-                                       titles=func_result.columns.values)
+                               titles=func_result.columns.values)
     if request.form.get('like'):
         data_aftermarket(data_table, 1)
         return render_template('thanks.html')

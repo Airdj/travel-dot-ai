@@ -94,9 +94,8 @@ def final_prompter_by_loc_flask(city_prompt):
             df = pd.read_sql_query(city_selected.statement,
                                    con=db.engine)
             return df.sample(n=10)
-    except Exception as e:
+    except Exception:
         print('Sorry, something went wrong :(')
-        print(e)
 
 
 def data_aftermarket(df, score_point):
@@ -109,15 +108,11 @@ def data_aftermarket(df, score_point):
 
     ret = db.session.query(exists().where(
         GeneratedPropositions.proposition_hash == algo_hash)).scalar()
-    print(ret)
     if ret:
         proposition_selected = db.session.query(
             GeneratedPropositions).filter(
             GeneratedPropositions.proposition_hash == algo_hash).first()
-        print(proposition_selected)
-        print(proposition_selected.score)
         proposition_selected.score += score_point
-        print(proposition_selected.score)
         db.session.commit()
     else:
         proposition = insert_generated_proposition(algo_hash, data_mean,
