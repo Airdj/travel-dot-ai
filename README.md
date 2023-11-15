@@ -6,4 +6,5 @@ Planned upgrades:
 - add selection of distance to show places around the city
 - add selection of types of places to show
 - implement recommendation algorithm based on few criterias
-- add ranking options for generated data
+- add rating options for generated data
+- MORE TESTS
